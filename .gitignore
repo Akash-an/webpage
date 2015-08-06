@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+<head>
+	<script>
+		function showhide(a)
+		 {
+			var div = document.getElementById(a);
+			if (div.style.display !== "none") {
+				div.style.display = "none";
+			}
+			else {
+				div.style.display = "block";
+			}
+		}
+		function del()
+		{
+			
+			var x=window.confirm('are u sure u want to delete?');
+			return x;
+		}
+	</script>
+
+</head>
+
+<body>
+<?php
+	
+	$dbhost = 'localhost';
+		$dbuser = 'securega';
+		$dbpass = 'password';
+		$dbname = "pos";
+		$conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+		
+		if($conn->connect_error)
+		{	
+		die("Connection failed: " . $conn->connect_error);
+		}
+	
+	if(isset($_POST["name"])){
+		$name=$_POST['name'];
+		$logo=$_POST['logo'];
+		$url=$_POST['url'];
+	
+		$sql="insert into client_details(c_name,c_logo,c_url)
+				values('$name','$logo','$url')";
+		if($conn->query($sql)===true)
+			echo"successfully added";
+		else echo"error".$conn->error;
+	}
+	
+	if(isset($_POST["cli"])){
+		
+		$c=$_POST['cli'];
+		
+		
+		$s= "delete from client_details where c_name='$c'";
+		if($conn->query($s)===true)
+			echo"successfully deleted";
+		else echo"error".$conn->error;
+		
+	}
+	
+	if(isset($_POST['ename_l'])){
+		$n = $_POST['ename_l'];
+		$l = $_POST['elogo'];
+		$s = "update client_details set c_logo='$l' where c_name='$n'";
+		if($conn->query($s)===true)
+			echo "successfully changed";
+		else echo "error".$conn->error;
+	}
+	
+	if(isset($_POST['ename_u'])){
+		$n = $_POST['ename_u'];
+		$l = $_POST['eurl'];
+		$s = "update client_details set c_url='$l' where c_name='$n'";
+		if($conn->query($s)===true)
+			echo "successfully changed";
+		else echo "error".$conn->error;
+	}
+	
+?>	
+	
+	<button  Onclick="showhide('add')">Add Client </button><br/><br/>
+	<form method='POST' action="<?php echo $_SERVER['PHP_SELF']?>">
+	<div id="add" style="display:none">
+		NAME 	<input type='text' name='name' pattern="[A-Za-z0-9_]{2,}" style="margin-left:10px" required><br><br>
+		LOGO	<input type='text' name='logo' required style="margin-left:10px"><br><br>
+		URL		<input type='text' name='url' style="margin-left:47px" required><br><br>
+		<input type='submit' class="btn btn-primary" value='ADD'><br><br>
+	</form>
+	</div>
+	<input type="button" value="DELETE CLIENT" onclick="showhide('dele')"><br><br>
+	<div id="dele" style="display:none">
+	<form method='POST' action="<?php echo $_SERVER['PHP_SELF']?>">
+	<input type="text" name="cli"><br><br>
+	<input type="submit" value="DEL" onclick="return del()"><br><br>
+	</form>
+	</div>
+	
+	<button onclick="showhide('elogo')">Change Logo</button><br><br>
+	<form method='POST' action="<?php echo $_SERVER['PHP_SELF']?>">
+	<div id="elogo" style="display:none">
+		Client Name	<input type='text' name='ename_l' pattern="[A-Za-z0-9_]{2,}" style="margin-left:10px" required><br><br>
+		New Logo 	<input type='text' name='elogo' required style="margin-left:10px"><br><br>
+		
+		<input type='submit' class="btn btn-primary" value='CHANGE'><br><br>
+	</div>	
+	</form>
+	
+	<button onclick="showhide('eurl')">Change URL</button><br><br>
+	<form method='POST' action="<?php echo $_SERVER['PHP_SELF']?>">
+	<div id="eurl" style="display:none">
+		Client Name	<input type='text' name='ename_u' pattern="[A-Za-z0-9_]{2,}" style="margin-left:10px" required><br><br>
+		New Logo 	<input type='text' name='eurl' required style="margin-left:10px"><br><br>
+		<input type='submit' class="btn btn-primary" value='CHANGE'><br><br>
+	</div>	
+	</form>
+</body>
+</html>
