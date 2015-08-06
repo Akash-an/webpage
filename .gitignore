@@ -1,8 +1,82 @@
 <!doctype html>
 <html>
 <head>
+	<title>Admin Page</title>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<script>
-		function showhide(a)
+    function showhide_a()
+     {
+           var div = document.getElementById("admin_pass");
+    if (div.style.display !== "none") {
+        div.style.display = "none";
+    }
+    else {
+        div.style.display = "block";
+    }
+     }
+	 
+	 
+	 function showhide_au()
+     {
+           var div = document.getElementById("addu");
+    if (div.style.display !== "none") {
+        div.style.display = "none";
+    }
+    else {
+        div.style.display = "block";
+    }
+     }
+	 
+	 function showhide_im()
+     {
+           var div = document.getElementById("im");
+    if (div.style.display !== "none") {
+        div.style.display = "none";
+    }
+    else {
+        div.style.display = "block";
+    }
+     }
+	 
+	 function showhide_del()
+     {
+           var div = document.getElementById("del");
+    if (div.style.display !== "none") {
+        div.style.display = "none";
+    }
+    else {
+        div.style.display = "block";
+    }
+     }
+
+	 
+	 function showhide_mb()
+     {
+           var div = document.getElementById("mb");
+    if (div.style.display !== "none") {
+        div.style.display = "none";
+    }
+    else {
+        div.style.display = "block";
+    }
+     }
+	 
+	 function showhide_pr()
+     {
+           var div = document.getElementById("pr");
+    if (div.style.display !== "none") {
+        div.style.display = "none";
+    }
+    else {
+        div.style.display = "block";
+    }
+     }
+	 
+	 function showhide(a)
 		 {
 			var div = document.getElementById(a);
 			if (div.style.display !== "none") {
@@ -18,30 +92,110 @@
 			var x=window.confirm('are u sure u want to delete?');
 			return x;
 		}
-	</script>
-
+	 
+	 
+	 
+  </script>
 </head>
+<body style="margin-left:32px">
 
-<body>
 <?php
-	
-	$dbhost = 'localhost';
+		echo "hey";
+		$dbhost = 'localhost';
 		$dbuser = 'securega';
 		$dbpass = 'password';
 		$dbname = "pos";
 		$conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
-		
+		if($conn)
+			echo "connetcted";
 		if($conn->connect_error)
 		{	
 		die("Connection failed: " . $conn->connect_error);
-		}
+		} 
+	if(isset($_POST["uname"])){
+		$name=$_POST['uname'];
+		$pass=$_POST['pass'];
+		$level=$_POST['level'];
+		$clientid=$_POST['clientid'];
 	
-	if(isset($_POST["name"])){
+		$sql="insert into unit_master(um_uname,um_pass,um_hierlevel,um_client_id)
+				values('$name','$pass','$level','$clientid')";
+		if($conn->query($sql)===true)
+			echo"successfully added";
+		else echo"error".$conn->error;
+	}
+	
+	if(isset($_GET['id'])){
+		$i=$_GET['id'];
+		$sql="delete from unit_master where um_id='$i'";
+		if($conn->query($sql)===true)
+			echo"successfully deleted";
+		else echo"error".$conn->error;
+	}
+
+		
+	/*$sql = "select * from unit_master";
+	$result=$conn->query($sql);
+	if($result->num_rows>0){
+		echo"
+	<table class='table' border='1'>
+		<thead>
+		<tr>
+			<th>ID</th>
+			<th>USERNAME</th>
+			<th>PASSWORD</th>
+			<th>LEVEL</	th>
+			<th>CLIENT ID</th>
+		</tr>
+		</thead>";
+		
+   
+		
+		
+		while($row=$result->fetch_assoc()){
+			echo"
+			<tr>
+				<td>".$row['um_id']."</td>
+				<td>".$row['um_uname']."</td>
+				<td>".$row['um_pass']."</td>
+				<td>".$row['um_hierlevel']."</td>
+				<td>".$row['um_client_id']."</td>
+				<td><a href='"."admin.php?id=".$row['um_id']."'>DELETE</a></td>
+			</tr>";
+		}
+	} */
+	if(isset($_POST["ppp"]))
+		{
+		//echo "after password is entered";
+		$new_pass=$_POST['ppp'];
+		//echo "$new_pass";
+		$sql = "UPDATE unit_master SET um_pass='$new_pass' WHERE um_id=1";
+	
+		if (mysqli_query($conn, $sql)) ;
+			//echo "Record updated successfully";
+		else ;
+			//echo "Error updating record: " . mysqli_error($conn);
+		}
+		
+		if(isset($_GET["uname_d"]))
+		{
+		//echo "after password is entered";
+		$un=$_GET['uname_d'];
+		//echo "$new_pass";
+		$sql = "DELETE from unit_master where um_uname='$un'";
+		if (mysqli_query($conn, $sql)) ;
+			//echo "Record updated successfully";
+		else ;
+			//echo "Error updating record: " . mysqli_error($conn);
+		}
+		
+		
+		if(isset($_POST["name"])){
 		$name=$_POST['name'];
 		$logo=$_POST['logo'];
 		$url=$_POST['url'];
 	
-		$sql="insert into client_details(c_name,c_logo,c_url)
+		$sql="insert into client_master(c_name,c_logo,c_url)
 				values('$name','$logo','$url')";
 		if($conn->query($sql)===true)
 			echo"successfully added";
@@ -53,7 +207,7 @@
 		$c=$_POST['cli'];
 		
 		
-		$s= "delete from client_details where c_name='$c'";
+		$s= "delete from client_master where c_name='$c'";
 		if($conn->query($s)===true)
 			echo"successfully deleted";
 		else echo"error".$conn->error;
@@ -63,7 +217,7 @@
 	if(isset($_POST['ename_l'])){
 		$n = $_POST['ename_l'];
 		$l = $_POST['elogo'];
-		$s = "update client_details set c_logo='$l' where c_name='$n'";
+		$s = "update client_master set c_logo='$l' where c_name='$n'";
 		if($conn->query($s)===true)
 			echo "successfully changed";
 		else echo "error".$conn->error;
@@ -72,48 +226,187 @@
 	if(isset($_POST['ename_u'])){
 		$n = $_POST['ename_u'];
 		$l = $_POST['eurl'];
-		$s = "update client_details set c_url='$l' where c_name='$n'";
+		$s = "update client_master set c_url='$l' where c_name='$n'";
 		if($conn->query($s)===true)
 			echo "successfully changed";
 		else echo "error".$conn->error;
 	}
-	
+		
+		
+		
+		
+		
+	$conn->close();
 ?>	
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="background-color:#CCFFFF;border-bottom:1000px;">
+		<div class="row" style="background-color:#00B8B2;">
+		<div class="col-md-12 navbar-header" style="max-width:100%;max-height:100px;padding-left:16px">
+			<img src="image.png" style="max-width:500px;max-height:60px;" >
+		<div class="navbar-right" style="padding-right:40px;padding-top:5px;">
+				<button type="button" class="btn btn-default navbar-btn" onclick="window.location.href='logout.php'">Sign Out</button>
+		</div>
+		</div>
+		</div>
+		<div class="navbar-text navbar-left" style="max-height:5px" >
+			<p> <?php //echo $_SESSION["USER"];?> </p>
+		</div>
+		<div class="navbar-text navbar-right" style="max-height:5px" style="">
+			<p style="color:#000000;padding-right:25px"> <?php //echo $_SESSION["LOGIN_TIME"];?> </p>
+		</div>
+	</nav>
+	<br/><br/><br/><br/><br/><br/>
 	
-	<button  Onclick="showhide('add')">Add Client </button><br/><br/>
+	
+	<div class="container" >
+	<h2 align="Center" >Welcome to the Admin page</h2> 
+	<br><br>
+	<div class="row">
+	
+	
+	<div class="col-md-6" >
+	<button class="btn btn-primary" Onclick="showhide_im()">Set Items Limit </button><br/><br/>
+	<div id="im" style="display:none;">
+	<h4> Set Maximum number of items in a master batch </h4>
+	<form>
+	<input type="text" name="max_number"><br/><br/>
+	<button type="submit" class="btn btn-primary" onClick="setm()">SAVE </button><br><br>
+	</form>
+	</div>
+	</div>
+	
+	
+	
+	<div class="col-md-6">
+	<button class="btn btn-primary" Onclick="showhide_a()">Change Admin Password </button><br/><br/>
+	
+	<div id="admin_pass" style="display:none;">
+	<form method='POST' action='admin.php'>
+		Enter new password:
+		<input type="password" id="ppp" name="ppp" style="margin-left:22px"><br><br>
+		Re-enter new password:
+		<input type="password" name="psw_rep"><br/><br/>
+		<input type="submit" class="btn btn-primary" value="SAVE"><br><br/>
+	</form>
+	</div>
+	
+	</div>
+
+	</div>
+	
+	<div class="row">
+	
+	<div class="col-md-6">
+	<button class="btn btn-primary" Onclick="showhide_au()">Add User </button><br/><br/>
+		<div id="addu" style="display:none;">
+		<form method='POST' action='admin.php'>
+			USERNAME <input type='text' name='uname' pattern="[A-Za-z0-9_]{2,}" style="margin-left:10px" required><br><br>
+			PASSWORD  <input type='text' name='pass' pattern="{6,}" style="margin-left:10px"><br><br>
+			LEVEL     <input type='text' name='level' pattern="[0-9]" style="margin-left:47px" required><br><br>
+			CLIENT ID <input type='text' name='clientid' style="margin-left:23px" required><br><br>
+		<input type='submit' class="btn btn-primary" value='ADD'><br><br>
+	</form>
+	</div>
+	</div> 
+	
+	<div class="col-md-6">
+	<button class="btn btn-primary" Onclick="showhide_del()">Delete User </button><br/><br/>
+	<div id="del" style="display:none;">
+	<form method="GET" action="admin.php">
+		USERNAME <input type='text' name='uname_d' pattern="[A-Za-z0-9_]{2,}" style="margin-left:10px" required><br><br>
+		<input type='submit' class="btn btn-primary" value='Delete'><br><br>
+	</form>
+	</div>
+	</div>
+	</div>
+	
+	
+	<div class="row">
+	
+	<div class="col-md-6">
+	<button class="btn btn-primary" Onclick="showhide_mb()">Master Batch Query</button><br/><br/>
+		<div id="mb" style="display:none;">
+	<form method="GET" action="admin.php">
+		Master Batch Code <input type='text' name='mb' style="margin-left:10px" required><br><br>
+		<input type='submit' class="btn btn-primary" value='Search'><br><br>
+	</form>
+	</div>
+	</div>
+	
+	
+	<div class="col-md-6">
+	<button class="btn btn-primary" Onclick="showhide_pr()">Product Query</button><br/><br/>
+		<div id="pr" style="display:none;">
+	<form method="GET" action="admin.php">
+		Product Code <input type='text' name='pr' style="margin-left:10px" required><br><br>
+		<input type='submit' class="btn btn-primary" value='Search'><br><br>
+	</form>
+	</div>
+		
+		
+	</div>
+	
+	
+	
+	
+	</div>
+	
+	
+	<div class="row">
+	<div class="col-md-6">
+	<button class="btn btn-primary" Onclick="showhide('add')">Add Client </button><br/><br/>
 	<form method='POST' action="<?php echo $_SERVER['PHP_SELF']?>">
 	<div id="add" style="display:none">
 		NAME 	<input type='text' name='name' pattern="[A-Za-z0-9_]{2,}" style="margin-left:10px" required><br><br>
 		LOGO	<input type='text' name='logo' required style="margin-left:10px"><br><br>
-		URL		<input type='text' name='url' style="margin-left:47px" required><br><br>
+		URL		<input type='text' name='url' style="margin-left:25px" required><br><br>
 		<input type='submit' class="btn btn-primary" value='ADD'><br><br>
-	</form>
 	</div>
-	<input type="button" value="DELETE CLIENT" onclick="showhide('dele')"><br><br>
-	<div id="dele" style="display:none">
-	<form method='POST' action="<?php echo $_SERVER['PHP_SELF']?>">
-	<input type="text" name="cli"><br><br>
-	<input type="submit" value="DEL" onclick="return del()"><br><br>
 	</form>
 	</div>
 	
-	<button onclick="showhide('elogo')">Change Logo</button><br><br>
+	<div class="col-md-6">
+	<input type="button" class="btn btn-primary" value="DELETE CLIENT" onclick="showhide('dele')"><br><br>
+	<div id="dele" style="display:none">
+	<form method='POST' action="<?php echo $_SERVER['PHP_SELF']?>">
+	<input type="text" name="cli"><br><br>
+	<input type="submit" class="btn btn-primary" value="DELETE" onclick="return del()"><br><br>
+	</div>
+	</form>
+	</div>
+	</div>
+	
+	<div class="row">
+	
+	<div class="col-md-6">
+	<button class="btn btn-primary" onclick="showhide('elogo')">Change Logo</button><br><br>
 	<form method='POST' action="<?php echo $_SERVER['PHP_SELF']?>">
 	<div id="elogo" style="display:none">
 		Client Name	<input type='text' name='ename_l' pattern="[A-Za-z0-9_]{2,}" style="margin-left:10px" required><br><br>
-		New Logo 	<input type='text' name='elogo' required style="margin-left:10px"><br><br>
+		New Logo 	<input type='text' name='elogo' required style="margin-left:25px"><br><br>
 		
 		<input type='submit' class="btn btn-primary" value='CHANGE'><br><br>
 	</div>	
 	</form>
+	</div>
 	
-	<button onclick="showhide('eurl')">Change URL</button><br><br>
+	
+	<div class="col-md-6">
+	<button class="btn btn-primary" onclick="showhide('eurl')">Change URL</button><br><br>
 	<form method='POST' action="<?php echo $_SERVER['PHP_SELF']?>">
 	<div id="eurl" style="display:none">
 		Client Name	<input type='text' name='ename_u' pattern="[A-Za-z0-9_]{2,}" style="margin-left:10px" required><br><br>
-		New Logo 	<input type='text' name='eurl' required style="margin-left:10px"><br><br>
+		New Logo 	<input type='text' name='eurl' required style="margin-left:25px"><br><br>
 		<input type='submit' class="btn btn-primary" value='CHANGE'><br><br>
 	</div>	
 	</form>
+	</div>
+	
+	</div>
+	
+	
+	</div>
+	
+	<br/><br/><br/><br/>
+	
 </body>
-</html>
+</html>	
